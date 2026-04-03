@@ -102,11 +102,14 @@ class SplatinatorApp:
         self.log_text.pack(fill=tk.BOTH, expand=True)
 
     def log(self, message):
+        """Thread-safe logging to the UI."""
+        self.root.after(0, self._log_internal, message)
+
+    def _log_internal(self, message):
         self.log_text.config(state='normal')
         self.log_text.insert(tk.END, message + "\n")
         self.log_text.see(tk.END)
         self.log_text.config(state='disabled')
-        self.root.update_idletasks()
         
     def browse_base_dir(self):
         d = filedialog.askdirectory(initialdir=self.base_dir.get())
@@ -150,18 +153,26 @@ class SplatinatorApp:
         thread.start()
         
     def launch_brush(self):
+        """Manually launch the Brush rendering engine."""
         if not self.project_name.get():
             messagebox.showerror("Error", "Please enter a project name.")
             return
-        proj_dir = os.path.join(self.base_dir.get().strip(), self.project_name.get().strip())
+        proj_dir = os.path.abspath(os.path.join(self.base_dir.get().strip(), self.project_name.get().strip()))
         if not os.path.exists(proj_dir):
             messagebox.showerror("Error", f"Project directory does not exist: {proj_dir}")
             return
-        brush_cmd = [BRUSH_PATH, proj_dir, "--with-viewer"]
-        # Use shell=True for non-windows to handle path resolution better if needed
-        creation_flags = subprocess.CREATE_NEW_CONSOLE if platform.system() == "Windows" else 0
-        subprocess.Popen(brush_cmd, creationflags=creation_flags)
-        self.log(f"\nLaunched Brush for {proj_dir}")
+            
+        try:
+            brush_exec = os.path.abspath(BRUSH_PATH)
+            brush_cmd = [brush_exec, proj_dir, "--with-viewer"]
+            cwd = os.path.dirname(brush_exec)
+            
+            # Use shell=True for non-windows to handle path resolution better if needed
+            creation_flags = subprocess.CREATE_NEW_CONSOLE if platform.system() == "Windows" else 0
+            subprocess.Popen(brush_cmd, cwd=cwd, creationflags=creation_flags)
+            self.log(f"\nLaunched Brush for {proj_dir}")
+        except Exception as e:
+            self.log(f"Failed to launch Brush: {str(e)}")
         
     def run_cmd(self, args, cwd=None):
         self.log(f"> {' '.join(args)}")
@@ -180,7 +191,7 @@ class SplatinatorApp:
         try:
             proj_name = self.project_name.get().strip()
             base = self.base_dir.get().strip()
-            proj_dir = os.path.join(base, proj_name)
+            proj_dir = os.path.abspath(os.path.join(base, proj_name))
             
             # --- 1. Setup Dirs ---
             self.log(f"--- Setting up project directories in {proj_dir} ---")
@@ -276,18 +287,23 @@ class SplatinatorApp:
                     
             # --- 8. Brush ---
             self.log("\n--- STEP 6: Launching Brush ---")
-            
-            brush_cmd = [BRUSH_PATH, proj_dir, "--with-viewer"]
-            self.log(f"Starting Brush in detached mode: {' '.join(brush_cmd)}")
-            creation_flags = subprocess.CREATE_NEW_CONSOLE if platform.system() == "Windows" else 0
-            subprocess.Popen(brush_cmd, creationflags=creation_flags)
+            try:
+                brush_exec = os.path.abspath(BRUSH_PATH)
+                brush_cmd = [brush_exec, proj_dir, "--with-viewer"]
+                cwd = os.path.dirname(brush_exec)
+                
+                self.log(f"Starting Brush in detached mode: {' '.join(brush_cmd)}")
+                creation_flags = subprocess.CREATE_NEW_CONSOLE if platform.system() == "Windows" else 0
+                subprocess.Popen(brush_cmd, cwd=cwd, creationflags=creation_flags)
+            except Exception as e:
+                self.log(f"WARNING: Automated Brush launch failed: {str(e)}")
             
             self.log("\n!!! Pipeline Complete !!!")
             
         except Exception as e:
             self.log(f"\nERROR: {str(e)}")
         finally:
-            self.start_btn.config(state="normal")
+            self.root.after(0, lambda: self.start_btn.config(state="normal"))
 
 if __name__ == "__main__":
     root = tk.Tk()

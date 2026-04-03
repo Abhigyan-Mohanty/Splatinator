@@ -1,0 +1,19 @@
+# System files
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Heavy binaries (Download these with download_binaries.py)
+brush/
+gaussiansplat/
+
+# Local outputs/data
+outputs/
+*.zip
+*.db
+!distorter/database.db # actually we should exclude the reconstructed ones
+
+# IDE settings
+.vscode/
+.idea/
