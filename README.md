@@ -1,12 +1,10 @@
-# 🌌 Splatinator
+# Splatinator
 
-**Splatinator** is a streamlined, utility-focused desktop application designed to automate the **Gaussian Splatting** pipeline. It handles everything from video frame extraction and COLMAP photogrammetry to real-time 3D visualization using the Brush engine.
-
-Designed for simplicity and portability, Splatinator stays under the 25MB GitHub limit by dynamically downloading heavy binaries upon setup.
+**Splatinator** is a streamlined, utility-focused desktop application designed to automate the **Gaussian Splatting** pipeline. It handles everything from video frame extraction and COLMAP photogrammetry to real-time 3D visualization using the Brush engine. I totally made this with antigravity and love that I can do all this to help myself and hopefully others like me (until someone comes along with a much much better version.
 
 ---
 
-## 🚀 Key Features
+## Key Features
 
 - **Cross-Platform Support**: Works on Windows, macOS (Apple Silicon), and Linux.
 - **Automated Pipeline**: 
@@ -18,7 +16,7 @@ Designed for simplicity and portability, Splatinator stays under the 25MB GitHub
 
 ---
 
-## 🛠️ Installation & Setup
+## Installation & Setup
 
 ### 1. Prerequisites
 - **Python 3.9+** installed and added to your PATH.
@@ -36,7 +34,7 @@ Because GitHub has a 25MB file limit, you must download the latest versions of *
 
 ---
 
-## 📸 How to Use
+## How to Use
 
 1. **Launch Splatinator**:
    - **Windows**: Run `start_splatinator.bat`
@@ -54,7 +52,7 @@ Because GitHub has a 25MB file limit, you must download the latest versions of *
 
 ---
 
-## 📁 Technical Info
+## Technical Info
 
 - **COLMAP**: Used for Structure-from-Motion (SfM).
 - **Brush**: A high-performance Gaussian Splat renderer and editor.
@@ -62,7 +60,7 @@ Because GitHub has a 25MB file limit, you must download the latest versions of *
 
 ---
 
-## 📜 Credits
+## Credits
 - **COLMAP**: [github.com/colmap/colmap](https://github.com/colmap/colmap)
 - **Brush**: [github.com/ArthurBrussee/brush](https://github.com/ArthurBrussee/brush)
 - **Splatinator**: Automated pipeline by [User/Abhigyan Mohanty]
