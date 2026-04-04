@@ -1,6 +1,7 @@
 #  Splatinator
 
-**Splatinator** is a streamlined, utility-focused desktop application designed to automate the **Gaussian Splatting** pipeline. It handles everything from video frame extraction and COLMAP photogrammetry to real-time 3D visualization using the Brush engine.
+**Splatinator** is a streamlined, utility-focused desktop application designed to automate the **Gaussian Splatting** pipeline. It handles everything from video frame extraction and COLMAP photogrammetry to real-time 3D visualization using the Brush engine. 
+I am deeply deeply thankful for Google's Antigravity for existing, for without it this project would've just not been possible for me to contribute to the community, thanks google <3
 
 Designed for simplicity and portability, Splatinator stays under the 25MB GitHub limit by dynamically downloading heavy binaries upon setup.
 
