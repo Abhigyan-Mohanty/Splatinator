@@ -4,15 +4,26 @@ __pycache__/
 *.pyo
 *.pyd
 
-# Heavy binaries (Download these with download_binaries.py)
+# Heavy binaries (downloaded automatically on first run)
 brush/
 gaussiansplat/
 
+# Local environment and setup state
+.venv/
+.cache/
+.splatinator_setup.json
+
+# PyInstaller build output
+build/
+dist/
+*.spec
+
 # Local outputs/data
 outputs/
+out/
 *.zip
 *.db
-!distorter/database.db # actually we should exclude the reconstructed ones
+!distorter/database.db
 
 # IDE settings
 .vscode/

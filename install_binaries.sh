@@ -1,50 +1,26 @@
-#!/bin/bash
+#!/usr/bin/env bash
+# macOS / Linux setup. COLMAP has no official binaries for these platforms,
+# so it comes from Homebrew / apt; Brush is downloaded from GitHub releases.
+set -e
+cd "$(dirname "$0")"
 
-# Splatinator Binary Installer (Linux/Mac)
-echo "=============================================="
-echo "  Splatinator Binary Installer"
-echo "=============================================="
-echo ""
-
-# Get script directory
-DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-cd "$DIR"
-
-# Check if python3 is installed
-if ! command -v python3 &> /dev/null
-then
-    echo "[ERROR] python3 could not be found. Please install it first."
+PY=$(command -v python3 || command -v python)
+if [ -z "$PY" ]; then
+    echo "[ERROR] Python 3.9+ is required. Install it and re-run this script."
     exit 1
 fi
 
-echo "Please select your target operating system:"
-echo "1) macOS (Apple Silicon)"
-echo "2) Linux (x86_64)"
-echo ""
-
-read -p "Enter choice (1-2) [Default 1]: " choice
-choice=${choice:-1}
-
-if [ "$choice" == "1" ]; then
-    TARGET_OS="macos"
-    echo "You selected macOS."
-    python3 download_binaries.py --os macos
-elif [ "$choice" == "2" ]; then
-    TARGET_OS="linux"
-    echo "You selected Linux."
-    python3 download_binaries.py --os linux
-else
-    echo "Invalid choice."
-    exit 1
+if ! command -v colmap >/dev/null 2>&1; then
+    echo "COLMAP is not installed."
+    if [ "$(uname)" = "Darwin" ]; then
+        echo "Installing with Homebrew..."
+        command -v brew >/dev/null 2>&1 && brew install colmap || \
+            echo "Install Homebrew first: https://brew.sh"
+    else
+        echo "Installing with apt (sudo password may be requested)..."
+        sudo apt-get update && sudo apt-get install -y colmap || \
+            echo "Install COLMAP with your distribution's package manager."
+    fi
 fi
 
-if [ $? -ne 0 ]; then
-    echo ""
-    echo "[ERROR] Installation failed."
-    exit 1
-fi
-
-echo ""
-echo "=============================================="
-echo "  Installation successfully finished!"
-echo "=============================================="
+"$PY" bootstrap.py --setup

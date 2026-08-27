@@ -1,0 +1,10 @@
+# Keep line endings correct on every platform.
+* text=auto eol=lf
+
+# Windows batch files must have CRLF or cmd.exe can mis-parse labels.
+*.bat text eol=crlf
+*.cmd text eol=crlf
+*.iss text eol=crlf
+
+# Shell scripts must have LF or bash on macOS/Linux fails with "bad interpreter".
+*.sh text eol=lf
